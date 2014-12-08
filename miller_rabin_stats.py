@@ -73,4 +73,7 @@ if __name__ == "__main__":
             else:
                 tvalues[m.t] = [m]
 
+    print("k iteration -> number elements discovered")
 
+    for (t, value) in tvalues.items():
+        print("{t} -> {c}".format(t=t, c=len(value)))
