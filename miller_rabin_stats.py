@@ -19,12 +19,11 @@ class ValueStatus():
         self.t = t
 
     def __repr__(self):
-        return "{n} {prime} {t}".format(n=self.n, prime=self.prime, t=self.t)
         if self.prime:
-            return "{n} is prime".format(n=self.n)
+            return "({n} [P])".format(n=self.n)
         if self.t != None:
-            return "{n} is composite; has t={t}".format(n=self.n, t=self.t)
-        return "{n} is trivially composite".format(n=self.n)
+            return "({n} [C] t={t})".format(n=self.n, t=self.t)
+        return "({n} [C] trivial)".format(n=self.n)
 
 
 def miller_rabin(n, k=50):
@@ -59,9 +58,11 @@ def miller_rabin(n, k=50):
     return ValueStatus(n,True)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Miller-Rabin Primality Test.')
+    parser = argparse.ArgumentParser(description='Miller-Rabin Primality Test\n' + 
+                                                 'Outputs k values and how many elements were discovered on that witness')
     parser.add_argument('start_value', help='value to begin testing', type=int)
     parser.add_argument('end_value', help='value to end testing (inclusive)', type=int)
+    parser.add_argument('-l', '--list-groups', dest="list_groups", action='store_true', help='Lists all elements within each witness group.')
     args = parser.parse_args()
 
     tvalues = {}
@@ -76,4 +77,7 @@ if __name__ == "__main__":
     print("k iteration -> number elements discovered")
 
     for (t, value) in tvalues.items():
-        print("{t} -> {c}".format(t=t, c=len(value)))
+        if args.list_groups:
+            print("{t} -> {c} : {l}".format(t=t, c=len(value), l=value))
+        else:
+            print("{t} -> {c}".format(t=t, c=len(value)))
